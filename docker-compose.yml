@@ -1,0 +1,18 @@
+version: '3'
+services:
+  db:
+    image: postgres:12.2-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: schild
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+  api:
+    image: schild-api
+    depends_on:
+      - db
+    ports:
+      - '3333:3333'
