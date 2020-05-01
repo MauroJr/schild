@@ -1,12 +1,14 @@
-import { fastify } from 'fastify';
-import { messageService } from './services';
+import { fastify, FastifyInstance } from 'fastify';
+import { messageService, boardsService } from './services';
+import { postgresPlugin } from './plugins/postgres';
 
 export default {
   start,
   stop
 };
 
-const app = function(fastify, opts, next) {
+const app = function(fastify: FastifyInstance, opts, next) {
+  fastify.register(boardsService);
   fastify.register(messageService);
 
   next();
@@ -19,11 +21,14 @@ const server = fastify({
   ignoreTrailingSlash: true
 });
 
+// Register plugins
+server.register(postgresPlugin);
+
 // Register application as a normal plugin.
 server.register(app);
 
 async function start() {
-  await server.listen(3333);
+  await server.listen(Number(process.env.API_PORT));
   console.log('Server successfully started!');
 }
 

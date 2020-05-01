@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "nx": "nx",
-    "start": "nx serve",
+    "start": "DOTENV_CONFIG_PATH=.env.${NODE_ENV:-development} nx serve",
     "build": "nx build",
     "test": "nx test",
     "lint": "nx workspace-lint && nx lint",
@@ -31,6 +31,7 @@
   "dependencies": {
     "document-register-element": "1.13.1",
     "fastify": "^3.0.0-rc.1",
+    "fastify-plugin": "^1.6.1",
     "migrate": "^1.6.2",
     "postgres": "^1.0.2",
     "react": "16.12.0",
