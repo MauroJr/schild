@@ -15,6 +15,6 @@ export async function boardsService(server: FastifyInstance) {
 
   server.get<{ Params: BoardsParams }>('/boards/:id', async request => {
     const [board] = await findBoard(sql, request.params.id);
-    return board;
+    return board || [];
   });
 }
