@@ -1,4 +1,4 @@
-import { TasksPostBody } from '.';
+import { TasksPostBody, TasksMoveBody } from '.';
 
 export function findTasks(sql: Function, columnId: number) {
   return sql`
@@ -50,33 +50,48 @@ export async function updateTask(sql: Function, task) {
   return updatedTask;
 }
 
-export function reorderTasks(sql: any, { id, newPosition }) {
+export async function deleteTask(sql: Function, id: number) {
+  return sql`
+    DELETE FROM tasks
+    WHERE id = ${id}
+  `;
+}
+
+export interface MoveOptions {
+  id: number;
+  toColumn?: number;
+  toPosition: number;
+}
+
+export function moveTask(sql: any, { id, toColumn, toPosition }: MoveOptions) {
   return sql.begin(async sql => {
-    const [{ position, columns_id: columnId }] = await sql`
+    const [{ position: fromPosition, columns_id: fromColumn }] = await sql`
       SELECT position, columns_id
       FROM tasks
       WHERE id = ${id}
     `;
 
+    toColumn = toColumn || fromColumn;
+
     await sql`
       UPDATE tasks SET position = position - 1
-      WHERE columns_id = ${columnId} AND position >= ${position}
+      WHERE columns_id = ${fromColumn} AND position >= ${fromPosition}
     `;
 
     await sql`
       UPDATE tasks SET position = position + 1
-      WHERE columns_id = ${columnId} AND position >= ${newPosition}
+      WHERE columns_id = ${toColumn} AND position >= ${toPosition}
     `;
 
     await sql`
-      UPDATE tasks SET position = ${newPosition}
+      UPDATE tasks SET position = ${toPosition}, columns_id = ${toColumn}
       WHERE id = ${id}
     `;
 
     return sql`
       SELECT id, name, description
       FROM tasks
-      WHERE columns_id = ${columnId}
+      WHERE columns_id = ${toColumn}
       ORDER BY position ASC
     `;
   });
