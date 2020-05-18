@@ -1,7 +1,12 @@
 import { fastify, FastifyInstance } from 'fastify';
 import formBodyPlugin from 'fastify-formbody';
 
-import { messageService, boardsService, columnsService } from './services';
+import {
+  messageService,
+  boardsService,
+  columnsService,
+  tasksService
+} from './services';
 import { postgresPlugin } from './plugins/postgres';
 
 export default {
@@ -13,6 +18,7 @@ const app = function(fastify: FastifyInstance, opts, next) {
   fastify.register(boardsService);
   fastify.register(messageService);
   fastify.register(columnsService);
+  fastify.register(tasksService);
 
   next();
 };
