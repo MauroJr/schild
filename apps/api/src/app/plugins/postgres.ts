@@ -38,7 +38,24 @@ export interface PostgresOptions {
 
 // define plugin
 const plugin: FastifyPlugin<PostgresOptions> = (fastify, options, done) => {
-  fastify.decorate('sql', postgres(options));
+  fastify.decorate(
+    'sql',
+    postgres(
+      Object.assign(
+        {},
+        {
+          debug: process.env.LOG_LEVEL === 'debug' ? debug : undefined
+        },
+        options
+      )
+    )
+  );
+
+  function debug(connection, query, params) {
+    fastify.log.debug(connection, 'Postgres Connection');
+    fastify.log.debug(query, 'Postgres Query');
+    fastify.log.debug(params, 'Postgres Params');
+  }
 
   done();
 };

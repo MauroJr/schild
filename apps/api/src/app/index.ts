@@ -1,5 +1,7 @@
 import { fastify, FastifyInstance } from 'fastify';
-import { messageService, boardsService } from './services';
+import formBodyPlugin from 'fastify-formbody';
+
+import { messageService, boardsService, columnsService } from './services';
 import { postgresPlugin } from './plugins/postgres';
 
 export default {
@@ -10,6 +12,7 @@ export default {
 const app = function(fastify: FastifyInstance, opts, next) {
   fastify.register(boardsService);
   fastify.register(messageService);
+  fastify.register(columnsService);
 
   next();
 };
@@ -23,9 +26,10 @@ const server = fastify({
 
 // Register plugins
 server.register(postgresPlugin);
+server.register(formBodyPlugin);
 
 // Register application as a normal plugin.
-server.register(app);
+server.register(app, { prefix: '/api' });
 
 async function start() {
   await server.listen(Number(process.env.API_PORT));

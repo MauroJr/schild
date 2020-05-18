@@ -5,6 +5,7 @@
   "scripts": {
     "nx": "nx",
     "start": "DOTENV_CONFIG_PATH=.env.${NODE_ENV:-development} nx serve",
+    "serve": "nx serve",
     "build": "nx build",
     "test": "nx test",
     "lint": "nx workspace-lint && nx lint",
@@ -30,14 +31,16 @@
   "private": true,
   "dependencies": {
     "document-register-element": "1.13.1",
-    "fastify": "^3.0.0-rc.1",
+    "fastify": "^3.0.0-rc.2",
+    "fastify-formbody": "^4.0.1",
     "fastify-plugin": "^1.6.1",
     "make-promises-safe": "^5.1.0",
     "migrate": "^1.6.2",
     "postgres": "^1.0.2",
     "react": "16.12.0",
+    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "16.12.0",
-    "styled-components": "5.0.1"
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@nrwl/cypress": "9.2.3",

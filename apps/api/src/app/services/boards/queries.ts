@@ -1,6 +1,4 @@
-export { findBoard, findBoards };
-
-function findBoards(sql: Function) {
+export function findBoards(sql: Function) {
   return sql`
     SELECT
       id,
@@ -26,7 +24,7 @@ function findBoards(sql: Function) {
   `;
 }
 
-function findBoard(sql: Function, id: number) {
+export function findBoard(sql: Function, id: number) {
   return sql`
     SELECT
       id,
